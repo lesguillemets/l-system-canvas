@@ -15,7 +15,7 @@ maxmin xs = foldl' f (head xs, head xs) (tail xs)
 
 fit :: (Double, Double) -- the size
     -> (Double, Double) -> (Double, Double) -- topLeft, bottomRight
-    -> Picture () -> Picture ()
-fit (w,h) (lft,top) (rgt,btm) = let rat = min (w/(rgt-lft)) (h/(btm-top))
+    -> Point -> Point
+fit (w,h) (lft,top) (rgt,btm) (x,y) = let rat = min (w/(rgt-lft)) (h/(btm-top))
         in
-            scale (rat, rat) . translate (-lft, -top)
+            (rat * (x-lft), rat * (y-top))

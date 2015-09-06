@@ -78,6 +78,7 @@ execCs' paths currentPath !t@(Turtle{..}) (c:cs) =
 runCommands :: Turtle -> [Command] -> [Shape ()]
 runCommands t = map path . simCommands t
 
+-- TODO : line width
 drawFit :: Canvas -> (Double, Double) -> Turtle -> [Command] -> IO ()
 drawFit cnv (w,h) t cs = let
     paths = simCommands t cs
@@ -85,8 +86,8 @@ drawFit cnv (w,h) t cs = let
     (rMost, lMost) =  maxmin . map fst $ points
     (bottom, top) =  maxmin . map snd $ points
     in
-        forM_ paths $ renderOnTop cnv . fit (w,h) (lMost,top) (rMost,bottom)
-                                . stroke . path
+        forM_ paths $ renderOnTop cnv . stroke . path
+                        . map (fit (w,h) (lMost,top) (rMost,bottom))
 
 drawTurtle :: Canvas -> Turtle -> [Command] -> IO ()
 drawTurtle = drawTurtleWithConfig id
