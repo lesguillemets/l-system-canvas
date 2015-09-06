@@ -34,6 +34,7 @@ data Command = Jump Double
              | Save
              | Load
 
+-- TODO : prefer [[Point]] ?
 runCommand :: Turtle -> Command -> (Turtle, Maybe (Shape ()))
 runCommand !t@(Turtle{..}) c =
     case c of
