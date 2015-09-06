@@ -1,7 +1,7 @@
 {-# LANGUAGE DisambiguateRecordFields #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE BangPatterns #-}
-module Turtle (Turtle(..), blankTurtle, Command(..)
+module Turtle (Turtle(..), blankTurtle, Command(..), simCommands
              , drawTurtle, drawTurtleWithConfig, runCommands) where
 
 import Control.Arrow
@@ -34,30 +34,46 @@ data Command = Jump Double
              | Save
              | Load
 
--- TODO : prefer [[Point]] ?
-runCommand :: Turtle -> Command -> (Turtle, Maybe (Shape ()))
-runCommand !t@(Turtle{..}) c =
+-- TODO: Simplify
+simCommands :: Turtle -> [Command] -> [[Point]]
+simCommands = execCs' [] []
+execCs' :: [[Point]] -> [Point] -> Turtle -> [Command] -> [[Point]]
+execCs' paths currentPath _ [] = currentPath:paths
+execCs' paths currentPath !t@(Turtle{..}) (c:cs) =
     case c of
-        (Jump d)     -> (t{_loc = _loc +: forward t d}, Nothing)
-        (Draw d)     -> let newLoc = _loc +: forward t d in
-            (t{_loc = newLoc}, Just $ path [_loc, newLoc])
-        (Turn arg)   -> (t{_dir = _dir + arg}, Nothing)
-        (JumpTo d)   -> (t{_loc = d}, Nothing)
-        (DrawTo d)   -> (t{_loc = d}, Just $ path [_loc, d])
-        (SetAng dir) -> (t{_dir = dir}, Nothing)
+        (Jump d)     -> case currentPath of
+                            [] -> execCs' paths []
+                                    t{_loc = _loc +: forward t d} cs
+                            cP -> execCs' (cP:paths) []
+                                    t{_loc = _loc +: forward t d} cs
+        (Draw d)     -> let newLoc = _loc +: forward t d
+                            newT = t{_loc = newLoc}
+                            in case currentPath of
+                                   [] -> execCs' paths [newLoc, _loc] newT cs
+                                   cP -> execCs' paths (newLoc:cP) newT cs
+        (Turn arg)   -> execCs' paths currentPath t{_dir = _dir + arg} cs
+        (JumpTo d)   -> case currentPath of
+                            [] -> execCs' paths [] t{_loc = d} cs
+                            cP -> execCs' (cP:paths) [] t{_loc = d} cs
+        (DrawTo d)   -> case currentPath of
+                            [] -> execCs' paths [d, _loc] t{_loc = d} cs
+                            cP -> execCs' paths (d:cP) t{_loc = d} cs
+        (SetAng dir) -> execCs' paths currentPath t{_dir = dir} cs
         (SetState (loc,dir))
-                     -> (t{_dir=dir, _loc=loc}, Nothing)
-        Stay         -> (t, Nothing)
-        Save         -> (t{_memory = (_loc,_dir):_memory}, Nothing)
-        Load         -> let ((newLoc,newDir):post) = _memory in
-            (t{_loc = newLoc, _dir = newDir, _memory = post}, Nothing)
+                     -> execCs' paths currentPath t{_dir=dir, _loc=loc} cs
+        Stay         -> execCs' paths currentPath t cs
+        Save         ->
+            execCs' paths currentPath t{_memory = (_loc,_dir):_memory} cs
+        Load         -> let
+            ((newLoc,newDir):post) = _memory
+            newT = t{_loc = newLoc, _dir = newDir, _memory = post}
+            in
+                case currentPath of
+                    [] -> execCs' paths [] newT cs
+                    cP -> execCs' (cP:paths) [] newT cs
 
 runCommands :: Turtle -> [Command] -> [Shape ()]
-runCommands _ [] = []
-runCommands t (c:cs) = let (nt, shape) = runCommand t c in
-    case shape of
-        Nothing -> runCommands nt cs
-        (Just s) -> s:runCommands nt cs
+runCommands t = map path . simCommands t
 
 drawTurtle :: Canvas -> Turtle -> [Command] -> IO ()
 drawTurtle = drawTurtleWithConfig id
