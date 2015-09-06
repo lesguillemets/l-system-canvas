@@ -1,10 +1,13 @@
 {-# LANGUAGE DisambiguateRecordFields #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE BangPatterns #-}
-module Turtle (Turtle(..), blankTurtle, Command(..), simCommands
+module Turtle (Turtle(..), blankTurtle, Command(..), simCommands, drawFit
              , drawTurtle, drawTurtleWithConfig, runCommands) where
 
+import Helpers
+
 import Control.Arrow
+import Control.Monad
 import Haste.Graphics.Canvas
 
 type Dir = Double
@@ -74,6 +77,16 @@ execCs' paths currentPath !t@(Turtle{..}) (c:cs) =
 
 runCommands :: Turtle -> [Command] -> [Shape ()]
 runCommands t = map path . simCommands t
+
+drawFit :: Canvas -> (Double, Double) -> Turtle -> [Command] -> IO ()
+drawFit cnv (w,h) t cs = let
+    paths = simCommands t cs
+    points = concat paths
+    (rMost, lMost) =  maxmin . map fst $ points
+    (bottom, top) =  maxmin . map snd $ points
+    in
+        forM_ paths $ renderOnTop cnv . fit (w,h) (lMost,top) (rMost,bottom)
+                                . stroke . path
 
 drawTurtle :: Canvas -> Turtle -> [Command] -> IO ()
 drawTurtle = drawTurtleWithConfig id
