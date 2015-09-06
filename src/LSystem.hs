@@ -5,4 +5,4 @@ import Turtle
 
 main = do
     Just cnv <- getCanvasById "canv"
-    drawTurtle cnv blankTurtle [DrawTo (200,200)]
+    drawFit cnv (500,500) blankTurtle . concat . replicate 8 $ [Turn (pi/13), Draw 20]
