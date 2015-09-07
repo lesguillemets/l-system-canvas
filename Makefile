@@ -1,5 +1,5 @@
-HFILE=./src/LSystem.hs
-JSFILE=./build/LSystem.js
+HFILE=./src/Main.hs
+JSFILE=./build/Main.js
 
 $(JSFILE): $(wildcard ./src/*.hs)
 	hastec -isrc -O2 $(HFILE) -o $(JSFILE)
