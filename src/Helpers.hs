@@ -14,8 +14,10 @@ maxmin xs = foldl' f (head xs, head xs) (tail xs)
             | otherwise = (ma, mi)
 
 fit :: (Double, Double) -- the size
+    -> (Double, Double) -- margin
     -> (Double, Double) -> (Double, Double) -- topLeft, bottomRight
     -> Point -> Point
-fit (w,h) (lft,top) (rgt,btm) (x,y) = let rat = min (w/(rgt-lft)) (h/(btm-top))
+fit (w,h) (marginTop, marginSide) (lft,top) (rgt,btm) (x,y) =
+    let rat = min ((w-2*marginSide)/(rgt-lft)) ((h-2*marginTop)/(btm-top))
         in
-            (rat * (x-lft), rat * (y-top))
+            (marginSide + rat * (x-lft), marginTop + rat * (y-top))

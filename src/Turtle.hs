@@ -1,8 +1,9 @@
 {-# LANGUAGE DisambiguateRecordFields #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE BangPatterns #-}
-module Turtle (Turtle(..), blankTurtle, Command(..), simCommands, drawFit
-             , drawTurtle, drawTurtleWithConfig, runCommands) where
+module Turtle (Turtle(..), blankTurtle, Command(..), RenderConfig(..)
+             , simCommands, drawFit, drawTurtle
+             , drawTurtleWithProcess, runCommands) where
 
 import Helpers
 
@@ -78,24 +79,30 @@ execCs' paths currentPath !t@(Turtle{..}) (c:cs) =
 runCommands :: Turtle -> [Command] -> [Shape ()]
 runCommands t = map path . simCommands t
 
+data RenderConfig = RenderConfig {
+                  _size :: (Double, Double),
+                  _margin :: (Double, Double)
+}
+
 -- TODO : line width
-drawFit :: Canvas -> (Double, Double) -> Turtle -> [Command] -> IO ()
-drawFit cnv (w,h) t cs = let
+drawFit :: Canvas -> RenderConfig -> Turtle -> [Command] -> IO ()
+drawFit cnv r t cs = let
     paths = simCommands t cs
     points = concat paths
     (rMost, lMost) =  maxmin . map fst $ points
     (bottom, top) =  maxmin . map snd $ points
     in
-        forM_ paths $ renderOnTop cnv . stroke . path
-                        . map (fit (w,h) (lMost,top) (rMost,bottom))
+        forM_ paths $ renderOnTop cnv . stroke . path . map (
+                fit (_size r) (_margin r) (lMost,top) (rMost,bottom)
+                )
 
 drawTurtle :: Canvas -> Turtle -> [Command] -> IO ()
-drawTurtle = drawTurtleWithConfig id
+drawTurtle = drawTurtleWithProcess id
 
-drawTurtleWithConfig :: (Picture() -> Picture ()) -- configure
+drawTurtleWithProcess :: (Picture() -> Picture ()) -- configure
                      -> Canvas -- canvas to draw on
                      -> Turtle -- initial turtle
                      -> [Command] -- commands to execute
                      -> IO ()
-drawTurtleWithConfig f cnv t =
+drawTurtleWithProcess f cnv t =
     mapM_ (renderOnTop cnv . f . stroke) . runCommands t
