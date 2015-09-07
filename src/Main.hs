@@ -5,17 +5,6 @@ import Turtle
 import LSystem
 import Translator
 
-toCommands :: String -> [Command]
-toCommands = map (\c -> case c of
-    'X' -> Stay
-    '+' -> Turn (pi/7)
-    '-' -> Turn (-pi/7)
-    '*' -> Turn (pi/13)
-    '/' -> Turn (-pi/13)
-    '[' -> Save
-    ']' -> Load
-    'F' -> Draw 10
-    )
 treeSystem = LSystem {
     _state = ".",
     _rule = \c -> case c of
