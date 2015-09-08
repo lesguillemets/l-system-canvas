@@ -61,11 +61,11 @@ mkTr from to = do
     tr <- newElem "tr"
     c <- newElem "td"
     setClass c "char" True
-    setProp c "innerText" from
+    setProp c "textContent" from
     
     str <- newElem "td"
     setClass str "ruleAfter" True
-    setProp str "innerText" to
+    setProp str "textContent" to
     
     d <- del
     
@@ -80,10 +80,10 @@ del = do
     setClass d "del" True
     b <- newElem "div"
     setClass b "button" True
-    setProp b "innerText" "del"
+    setProp b "textContent" "del"
     _ <- onEvent b Click $ \_ -> do
         row <- getParent d
-        (c:str:_) <- mapM (`getProp` "innerText") =<< getChildren row
+        (c:str:_) <- mapM (`getProp` "textContent") =<< getChildren row
         writeLog $ "Deleting " ++ c ++ " -> " ++ str
         getParent row >>= (`deleteChild` row)
     d `appendChild` b
@@ -106,7 +106,7 @@ getRules = mapM readTr . tail
 
 readTr :: Elem -> IO (Char, String)
 readTr tr = do
-    (chr:str:_) <- mapM (`getProp` "innerText") =<< getChildren tr
+    (chr:str:_) <- mapM (`getProp` "textContent") =<< getChildren tr
     return (head chr, str)
 
 setUpInterface :: IO [HandlerInfo]
