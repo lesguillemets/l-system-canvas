@@ -63,6 +63,15 @@ plant = LSystem {
 }
 -- }}}
 
+-- from: https://www.sidefx.com/docs/houdini14.0/nodes/sop/lsystem
+kochIsland :: LSystem Char
+kochIsland = LSystem {
+    _state = "2b2b2b2",
+    _rule = \c -> case c of
+        '2' -> "2b2B2B22b2b2B2"
+        _ -> return c
+}
+
 plantB :: LSystem Char
 plantB = LSystem {
     _state = ".",
