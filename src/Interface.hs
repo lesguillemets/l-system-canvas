@@ -1,10 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Interface (setUpInterface) where
-
 import Data.Maybe
 
 import Haste
 import Haste.DOM
 import Haste.Events
+import Haste.Foreign
 
 -- {{{ Consts
 idNewRuleBefore :: ElemID
@@ -54,6 +55,11 @@ del = do
     b <- newElem "div"
     setClass b "button" True
     setProp b "innerText" "del"
+    _ <- onEvent b Click $ \_ -> do
+        row <- getParent d
+        (c:str:_) <- mapM (`getProp` "innerText") =<< getChildren row
+        writeLog $ "Deleting " ++ c ++ " -> " ++ str
+        getParent row >>= (`deleteChild` row)
     d `appendChild` b
     return d
 -- }}}
@@ -63,5 +69,10 @@ setUpInterface :: IO ()
 setUpInterface = do
     _ <- setUpAdd
     return ()
+
+-- helper {{{
+getParent :: Elem -> IO Elem
+getParent = ffi "(function(x) {return x.parentNode;})"
+-- }}}
 
 -- vim:fdm=marker
