@@ -21,6 +21,15 @@ koch = LSystem {
         _ -> return c
 }
 
+sierpinski :: LSystem Char
+sierpinski = LSystem {
+    _state = "1.cc1,cc1,",
+    _rule = \c -> case c of
+        '.' -> ".cc1,CC1.CC1,cc1."
+        ',' -> ",1,"
+        _ -> return c
+}
+
 treeB :: LSystem Char
 treeB = LSystem {
     _state = ".",
