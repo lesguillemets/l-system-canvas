@@ -16,6 +16,9 @@ defaultMap = M.fromList $
     ++ zip ['A'..'Z'] (map (Turn . (\n -> -pi/n) . fromIntegral) ([1..]::[Int]))
 
 defaultTranslator :: Translator
-defaultTranslator c = case c `M.lookup` defaultMap of
-                          Nothing -> Stay
-                          (Just cmd) -> cmd
+defaultTranslator = fromMap defaultMap
+
+fromMap :: M.Map Char Command -> Translator
+fromMap m c = case c `M.lookup` m of
+                Nothing -> Stay
+                (Just cmd) -> cmd
