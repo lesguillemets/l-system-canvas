@@ -2,6 +2,7 @@ module LSystem where
 import Data.List (foldl')
 import Data.Function ((&))
 
+-- TODO : perhaps we should save accompanying translator
 data LSystem a = LSystem {
     _state :: [a],
     _rule :: a -> [a]
