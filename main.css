@@ -62,12 +62,14 @@ canvas {
 }
 
 .button {
+	padding:1px;
 	background-color:#aaa;
-	border:1px solid black;
 	text-align:center;
-	border-radius:4px;
+	border: 1px solid black;
+	border-radius:3px;
 	-moz-user-select:none;
 	-webkit-user-select:none;
+	width:4em;
 }
 
 .button:hover{

@@ -16,6 +16,8 @@ idNewRuleAdd :: ElemID
 idNewRuleAdd = "newRuleAdd"
 idRules :: ElemID
 idRules = "rules"
+idDraw :: ElemID
+idDraw = "draw"
 -- }}}
 
 -- {{{ Adding rules
@@ -65,10 +67,27 @@ del = do
 -- }}}
 -- }}}
 
-setUpInterface :: IO ()
-setUpInterface = do
-    _ <- setUpAdd
-    return ()
+setUpDraw :: IO HandlerInfo
+setUpDraw = do
+    Just button <- elemById idDraw
+    onEvent button Click $ \_ -> do
+        rules <- getRules
+        mapM_ (writeLog . show) rules
+
+getRules :: IO [(Char, String)]
+getRules = mapM readTr . tail
+    =<< (getChildren . fromJust) =<< elemById idRules
+
+readTr :: Elem -> IO (Char, String)
+readTr tr = do
+    (chr:str:_) <- mapM (`getProp` "innerText") =<< getChildren tr
+    return (head chr, str)
+
+setUpInterface :: IO [HandlerInfo]
+setUpInterface = sequence [
+    setUpAdd,
+    setUpDraw
+    ]
 
 -- helper {{{
 getParent :: Elem -> IO Elem
