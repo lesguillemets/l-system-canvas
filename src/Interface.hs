@@ -4,8 +4,14 @@ import Data.Maybe
 
 import Haste
 import Haste.DOM
+import Haste.Graphics.Canvas
 import Haste.Events
 import Haste.Foreign
+import Haste.Performance
+
+import LSystem
+import Translator
+import Turtle
 
 -- {{{ Consts
 showWarn :: String -> IO ()
@@ -25,6 +31,8 @@ idInit :: ElemID
 idInit = "init"
 idIter :: ElemID
 idIter = "iter"
+idCanv :: ElemID
+idCanv = "canv"
 -- }}}
 
 -- {{{ Adding rules
@@ -90,9 +98,7 @@ setUpDraw = do
         rules <- getRules
         Just initState <- getValue . fromJust =<< elemById idInit
         Just iteration <- getValue . fromJust =<< elemById idIter
-        writeLog "rendering"
-        mapM_ (writeLog . show) rules
-        writeLog $ "to the " ++ iteration ++ " th iteration from \n" ++ initState
+        drawWith rules initState (read iteration)
 
 getRules :: IO [(Char, String)]
 getRules = mapM readTr . tail
@@ -114,4 +120,17 @@ getParent :: Elem -> IO Elem
 getParent = ffi "(function(x) {return x.parentNode;})"
 -- }}}
 
+drawWith :: [(Char,String)] -- rules
+         -> String          --initial state
+         -> Int             -- iteration
+         -> IO ()
+drawWith rules initial n = do
+    Just cnv <- getCanvasById idCanv
+    render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
+    t0 <- now
+    let syst = LSystem initial (ruleFromList rules)
+    drawFit cnv (RenderConfig (500,500) (20,20)) blankTurtle
+        . map defaultTranslator . _state . (`nthGen` n) $ syst
+    t1 <- now
+    writeLog $ "Took " ++ show (t1 - t0) ++ " ms to calc and render."
 -- vim:fdm=marker
