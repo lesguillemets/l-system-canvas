@@ -13,6 +13,6 @@ main = do
     render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
     t0 <- now
     drawFit cnv (RenderConfig (500,500) (20,20)) blankTurtle
-        . map sierpinskiHexTranslator . _state . (`nthGen` 8) $ sierpinskiHex
+        . map sierpinskiHexTranslator . _state . (`nthGen` 6) $ sierpinskiHex
     t1 <- now
     writeLog $ "Took " ++ show (t1 - t0) ++ " ms to calc and render."
