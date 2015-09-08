@@ -26,10 +26,14 @@ setUpAdd = do
     Just btn <- elemById idNewRuleAdd
     Just table <- elemById idRules
     onEvent btn Click $ \c -> do
-        Just from <- getValue =<< fromJust <$> elemById idNewRuleBefore
-        Just to <- getValue =<< fromJust <$> elemById idNewRuleAfter
+        Just ruleBefore <- elemById idNewRuleBefore
+        Just ruleAfter <- elemById idNewRuleAfter
+        Just from <- getValue ruleBefore
+        Just to <- getValue ruleAfter
         writeLog $ "Adding " ++ from ++ "->" ++ to
         mkTr from to >>= appendChild table
+        setProp ruleBefore "value" ""
+        setProp ruleAfter "value" ""
 
 -- {{{ Making row
 mkTr :: String -> String -> IO Elem
