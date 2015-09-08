@@ -3,7 +3,7 @@ import LSystem
 import Turtle
 import Translator
 
--- examples from en.wikipedia.org/wiki/L-system
+-- {{{ examples from en.wikipedia.org/wiki/L-system
 
 pythagoras :: LSystem Char
 pythagoras = LSystem {
@@ -44,11 +44,31 @@ sierpinskiHex = LSystem {
 sierpinskiHexTranslator :: Translator
 sierpinskiHexTranslator = withExtraList [ ('.', Draw 2), (',', Draw 2)]
 
-treeB :: LSystem Char
-treeB = LSystem {
+dragon :: LSystem Char
+dragon = LSystem {
+    _state = "2.",
+    _rule = \c -> case c of
+        '.' -> ".b,2b"
+        ',' -> "B2.B,"
+        _ -> return c
+}
+
+plant :: LSystem Char
+plant = LSystem {
+    _state = ".",
+    _rule = \c -> case c of
+        '.' -> "2g[[.]G.]G2[G2.]g."
+        '2' -> "22"
+        _ -> return c
+}
+-- }}}
+
+plantB :: LSystem Char
+plantB = LSystem {
     _state = ".",
     _rule = \c -> case c of
         '.' -> "2G[[.]g.]g2m[[2.]2M][m2.]M."
         '2' -> "22"
         _ -> return c
 }
+-- vim:fdm=marker
