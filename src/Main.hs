@@ -19,6 +19,6 @@ main = do
     render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
     t0 <- now
     drawFit cnv (RenderConfig (500,500) (20,20)) blankTurtle
-        . map defaultTranslator . _state . (!!6) . iterate nextGen $ treeSystem
+        . map defaultTranslator . _state . (`nthGen` 6) $ treeSystem
     t1 <- now
     writeLog $ "Took " ++ show (t1 - t0) ++ " ms to calc and render."
