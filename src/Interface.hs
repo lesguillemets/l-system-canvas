@@ -8,6 +8,9 @@ import Haste.Events
 import Haste.Foreign
 
 -- {{{ Consts
+showWarn :: String -> IO ()
+showWarn = alert
+
 idNewRuleBefore :: ElemID
 idNewRuleBefore = "newRuleBefore"
 idNewRuleAfter :: ElemID
@@ -25,15 +28,20 @@ setUpAdd :: IO HandlerInfo
 setUpAdd = do
     Just btn <- elemById idNewRuleAdd
     Just table <- elemById idRules
-    onEvent btn Click $ \c -> do
+    onEvent btn Click $ \_ -> do
         Just ruleBefore <- elemById idNewRuleBefore
         Just ruleAfter <- elemById idNewRuleAfter
         Just from <- getValue ruleBefore
         Just to <- getValue ruleAfter
-        writeLog $ "Adding " ++ from ++ "->" ++ to
-        mkTr from to >>= appendChild table
-        setProp ruleBefore "value" ""
-        setProp ruleAfter "value" ""
+        case from of
+            [c] -> do
+                writeLog $ "Adding " ++ c:"->" ++ to
+                mkTr [c] to >>= appendChild table
+                setProp ruleBefore "value" ""
+                setProp ruleAfter "value" ""
+            _ -> do
+                writeLog $ "Got \"" ++ from ++ "\", unexpected length."
+                showWarn "Not a valid length!"
 
 -- {{{ Making row
 mkTr :: String -> String -> IO Elem
