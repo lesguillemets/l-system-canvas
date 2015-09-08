@@ -28,6 +28,10 @@ canvas {
 	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
 }
 
+#iter{
+	width:4em;
+	font-size:13;
+}
 
 .rules th {
 	width:50px;

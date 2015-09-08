@@ -21,6 +21,10 @@ idRules :: ElemID
 idRules = "rules"
 idDraw :: ElemID
 idDraw = "draw"
+idInit :: ElemID
+idInit = "init"
+idIter :: ElemID
+idIter = "iter"
 -- }}}
 
 -- {{{ Adding rules
@@ -84,7 +88,11 @@ setUpDraw = do
     Just button <- elemById idDraw
     onEvent button Click $ \_ -> do
         rules <- getRules
+        Just initState <- getValue . fromJust =<< elemById idInit
+        Just iteration <- getValue . fromJust =<< elemById idIter
+        writeLog "rendering"
         mapM_ (writeLog . show) rules
+        writeLog $ "to the " ++ iteration ++ " th iteration from \n" ++ initState
 
 getRules :: IO [(Char, String)]
 getRules = mapM readTr . tail
