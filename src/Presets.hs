@@ -1,5 +1,7 @@
 module Presets where
 import LSystem
+import Turtle
+import Translator
 
 -- examples from en.wikipedia.org/wiki/L-system
 
@@ -29,6 +31,18 @@ sierpinski = LSystem {
         ',' -> ",1,"
         _ -> return c
 }
+
+sierpinskiHex :: LSystem Char
+sierpinskiHex = LSystem {
+    _state = ".",
+    _rule = \c ->case c of
+        '.' -> "c,C.C,c"
+        ',' -> "C.c,c.C"
+        _ -> return c
+}
+
+sierpinskiHexTranslator :: Translator
+sierpinskiHexTranslator = withExtraList [ ('.', Draw 2), (',', Draw 2)]
 
 treeB :: LSystem Char
 treeB = LSystem {

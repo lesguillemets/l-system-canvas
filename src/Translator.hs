@@ -22,3 +22,9 @@ fromMap :: M.Map Char Command -> Translator
 fromMap m c = case c `M.lookup` m of
                 Nothing -> Stay
                 (Just cmd) -> cmd
+
+withExtra :: M.Map Char Command -> Translator
+withExtra = fromMap . (`M.union` defaultMap)
+
+withExtraList :: [(Char,Command)] -> Translator
+withExtraList = withExtra . M.fromList
