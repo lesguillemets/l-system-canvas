@@ -6,6 +6,7 @@ import Haste
 import Haste.DOM
 import Haste.Events
 
+-- {{{ Consts
 idNewRuleBefore :: ElemID
 idNewRuleBefore = "newRuleBefore"
 idNewRuleAfter :: ElemID
@@ -14,7 +15,9 @@ idNewRuleAdd :: ElemID
 idNewRuleAdd = "newRuleAdd"
 idRules :: ElemID
 idRules = "rules"
+-- }}}
 
+-- {{{ Adding rules
 setUpAdd :: IO HandlerInfo
 setUpAdd = do
     Just btn <- elemById idNewRuleAdd
@@ -25,6 +28,7 @@ setUpAdd = do
         writeLog $ "Adding " ++ from ++ "->" ++ to
         mkTr from to >>= appendChild table
 
+-- {{{ Making row
 mkTr :: String -> String -> IO Elem
 mkTr from to = do
     tr <- newElem "tr"
@@ -40,8 +44,9 @@ mkTr from to = do
     
     tr `setChildren` [c,str,d]
     return tr
+-- }}}
 
-
+-- {{{ Creating delete button
 del :: IO Elem
 del = do
     d <- newElem "td"
@@ -51,9 +56,12 @@ del = do
     setProp b "innerText" "del"
     d `appendChild` b
     return d
-
+-- }}}
+-- }}}
 
 setUpInterface :: IO ()
 setUpInterface = do
     _ <- setUpAdd
     return ()
+
+-- vim:fdm=marker
