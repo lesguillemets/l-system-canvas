@@ -2,6 +2,11 @@ canvas {
 	border: 1px solid black;
 }
 
+input {
+	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
+    font-size:13;
+}
+
 .rules {
 	margin:10px;
 	border: 1px solid black;
