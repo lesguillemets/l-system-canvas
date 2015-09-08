@@ -6,9 +6,11 @@ import Turtle
 import LSystem
 import Translator
 import Presets
+import Interface
 
 
 main = do
+    _ <- setUpInterface
     Just cnv <- getCanvasById "canv"
     render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
     t0 <- now
