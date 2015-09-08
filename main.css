@@ -1,3 +1,81 @@
 canvas {
-    border: 1px solid black;
+	border: 1px solid black;
+}
+
+.rules {
+	margin:10px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
+}
+
+.newRule {
+	margin:10px;
+	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
+}
+
+#newRuleBefore {
+	width:3em;
+	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
+}
+
+#newRuleBefore::after{
+	content:"  →";
+}
+
+#newRuleAfter {
+	width:40em;
+	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
+}
+
+
+.rules th {
+	width:50px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	text-align:center;
+}
+
+.rules td{
+	width:50px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding:3px;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.char {
+	text-align:center;
+}
+.char::after{
+	content:"  →";
+}
+
+.ruleAfter {
+	width:max-content;
+}
+
+.del{
+	-moz-user-select:none;
+	-webkit-user-select:none;
+}
+
+.button {
+	background-color:#aaa;
+	border:1px solid black;
+	text-align:center;
+	border-radius:4px;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+}
+
+.button:hover{
+	background-color: #ccc;
+	cursor:pointer;
+	user-select:none;
+}
+
+.button:active{
+	background-color: #555;
 }
