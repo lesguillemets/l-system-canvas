@@ -98,7 +98,7 @@ setUpDraw = do
         rules <- getRules
         Just initState <- getValue . fromJust =<< elemById idInit
         Just iteration <- getValue . fromJust =<< elemById idIter
-        drawWith rules initState (read iteration)
+        drawWith (reverse rules) initState (read iteration)
 
 getRules :: IO [(Char, String)]
 getRules = mapM readTr . tail
