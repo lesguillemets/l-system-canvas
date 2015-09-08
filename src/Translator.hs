@@ -4,6 +4,9 @@ import qualified Data.Map.Strict as M
 
 type Translator = (Char -> Command)
 
+-- TODO : insufficient
+-- * move?
+-- * not having two chars for the same Command
 defaultMap :: M.Map Char Command
 defaultMap = M.fromList $
     [ ('[', Save), (']', Load)]

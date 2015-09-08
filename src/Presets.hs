@@ -1,12 +1,23 @@
 module Presets where
 import LSystem
 
+-- examples from en.wikipedia.org/wiki/L-system
+
 pythagoras :: LSystem Char
 pythagoras = LSystem {
     _state = "1",
     _rule = \c -> case c of
         '2' -> "22"
         '1' -> "2[c1]C1"
+        _ -> return c
+}
+
+-- TODO: Can't handle iteration > 5
+koch :: LSystem Char
+koch = LSystem {
+    _state = "2",
+    _rule = \c -> case c of
+        '2' -> "2b2B2B2b2"
         _ -> return c
 }
 
