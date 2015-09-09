@@ -33,6 +33,9 @@ idIter :: ElemID
 idIter = "iter"
 idCanv :: ElemID
 idCanv = "canv"
+idRainbow :: ElemID
+idRainbow = "rainbow"
+
 -- }}}
 
 -- {{{ Adding rules
@@ -96,9 +99,10 @@ setUpDraw = do
     Just button <- elemById idDraw
     onEvent button Click $ \_ -> do
         rules <- getRules
+        rainbow <- getChecked . fromJust =<< elemById idRainbow
         Just initState <- getValue . fromJust =<< elemById idInit
         Just iteration <- getValue . fromJust =<< elemById idIter
-        drawWith (reverse rules) initState (read iteration)
+        drawWith rainbow (reverse rules) initState (read iteration)
 
 getRules :: IO [(Char, String)]
 getRules = mapM readTr . tail
@@ -118,18 +122,27 @@ setUpInterface = sequence [
 -- helper {{{
 getParent :: Elem -> IO Elem
 getParent = ffi "(function(x) {return x.parentNode;})"
+
+getChecked :: Elem -> IO Bool
+getChecked e = do
+    checked <- getProp e "checked"
+    return $ case checked of
+        "true" -> True
+        _ ->  False
 -- }}}
 
-drawWith :: [(Char,String)] -- rules
+drawWith :: Bool            -- use rainbow?
+         -> [(Char,String)] -- rules
          -> String          --initial state
          -> Int             -- iteration
          -> IO ()
-drawWith rules initial n = do
+drawWith r rules initial n = do
     Just cnv <- getCanvasById idCanv
     render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
     t0 <- now
     let syst = LSystem initial (ruleFromList rules)
-    drawFitRainbow cnv (RenderConfig (500,500) (20,20)) blankTurtle
+        drawer = if r then drawFitRainbow else drawFit
+    drawer cnv (RenderConfig (500,500) (20,20)) blankTurtle
         . map defaultTranslator . _state . (`nthGen` n) $ syst
     t1 <- now
     writeLog $ "Took " ++ show (t1 - t0) ++ " ms to calc and render."
