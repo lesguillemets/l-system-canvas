@@ -102,7 +102,7 @@ setUpDraw = do
         rainbow <- getChecked . fromJust =<< elemById idRainbow
         Just initState <- getValue . fromJust =<< elemById idInit
         Just iteration <- getValue . fromJust =<< elemById idIter
-        drawWith rainbow (reverse rules) initState (read iteration)
+        drawWith rainbow (reverse rules) initState iteration
 
 getRules :: IO [(Char, String)]
 getRules = mapM readTr . tail
