@@ -6,20 +6,23 @@
   <script src="./build/Main.js"></script>
 </head>
 <body>
-  <div class="drawing">
-    <canvas id="canv" width="500" height="500"></canvas>
-  </div>
-  <div class="config">
-    <table id="rules" class="rules">
-      <tr> <th>c</th> <th>str</th> <th>f</th> </tr>
-    </table>
-    <table class="newRule">
-      <tr>
-        <td><input id="newRuleBefore" type="text"></td>
-        <td><input id="newRuleAfter" type="text"></td>
-        <td><div class="button" id="newRuleAdd">add</div></td>
-      </tr>
-    </table>
+  <div class="container">
+    <div class="drawing">
+      <canvas id="canv" width="500" height="500"></canvas>
+    </div>
+    <div class="ruleConfig">
+      Rules:
+      <table id="rules" class="rules">
+        <tr> <th>c</th> <th>str</th> <th>f</th> </tr>
+      </table>
+      <table class="newRule">
+        <tr>
+          <td><input id="newRuleBefore" type="text"></td>
+          <td><input id="newRuleAfter" type="text"></td>
+          <td><div class="button" id="newRuleAdd">add</div></td>
+        </tr>
+      </table>
+    </div>
   </div>
   <div class="calcConfig">
     <ul>

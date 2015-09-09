@@ -2,9 +2,31 @@ canvas {
 	border: 1px solid black;
 }
 
+.container{
+	margin:auto;
+	width:100%;
+	display:inline-block;
+}
+
+.drawing{
+	margin:5px;
+	width:60%;
+	padding:5px;
+	float:left;
+	overflow:visible;
+}
+
+.ruleConfig {
+	margin:10px;
+	width:35%;
+	overflow:visible;
+	float:left;
+}
+
+
 input {
 	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
-    font-size:13;
+	font-size:13;
 }
 
 .rules {
@@ -25,11 +47,11 @@ input {
 }
 
 #newRuleBefore::after{
-	content:"  →";
+	content:" →";
 }
 
 #newRuleAfter {
-	width:40em;
+	width:11em;
 	font-family:"Ubuntu Mono", "Fantasque Sans Mono", monaco, monospace;
 }
 
@@ -50,8 +72,8 @@ input {
 	border: 1px solid black;
 	border-collapse: collapse;
 	padding:3px;
-	padding-left:10px;
-	padding-right:10px;
+	padding-left:3px;
+	padding-right:3px;
 }
 
 .char {
@@ -78,7 +100,7 @@ input {
 	border-radius:3px;
 	-moz-user-select:none;
 	-webkit-user-select:none;
-	width:4em;
+	width:3em;
 }
 
 .button:hover{
