@@ -2,10 +2,11 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE BangPatterns #-}
 module Turtle (Turtle(..), blankTurtle, Command(..), RenderConfig(..)
-             , simCommands, drawFit, drawTurtle
+             , simCommands, drawFit, drawFitRainbow, drawTurtle
              , drawTurtleWithProcess, runCommands) where
 
 import Helpers
+import Colour
 
 import Control.Arrow
 import Control.Monad
@@ -96,6 +97,22 @@ drawFit cnv r t cs = let
                 fit (_size r) (_margin r) (lMost,top) (rMost,bottom)
                 )
 
+-- TODO: combine with above
+drawFitRainbow ::Canvas -> RenderConfig -> Turtle -> [Command] -> IO ()
+drawFitRainbow cnv r t cs = let
+    paths = simCommands t cs
+    points = concat paths
+    (rMost, lMost) =  maxmin . map fst $ points
+    (bottom, top) =  maxmin . map snd $ points
+    rainbowWidth = 360 / fromIntegral (length paths)
+    rainbowNth i = color .
+        uncurry3 RGB $ fromHSV (rainbowWidth * fromIntegral i, 1, 1)
+    in
+        mapM_ (renderOnTop cnv) (zipWith rainbowNth ([0..]::[Int])
+        . map (stroke . path . map (
+                fit (_size r) (_margin r) (lMost,top) (rMost,bottom)
+                )) $ paths)
+
 drawTurtle :: Canvas -> Turtle -> [Command] -> IO ()
 drawTurtle = drawTurtleWithProcess id
 
@@ -106,3 +123,6 @@ drawTurtleWithProcess :: (Picture() -> Picture ()) -- configure
                      -> IO ()
 drawTurtleWithProcess f cnv t =
     mapM_ (renderOnTop cnv . f . stroke) . runCommands t
+
+uncurry3 :: (a -> b -> c -> d) -> (a,b,c) -> d
+uncurry3 f (a,b,c) = f a b c

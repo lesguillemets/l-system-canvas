@@ -129,7 +129,7 @@ drawWith rules initial n = do
     render cnv (color (RGB 255 255 255) . fill $ rect (0,0) (500,500))
     t0 <- now
     let syst = LSystem initial (ruleFromList rules)
-    drawFit cnv (RenderConfig (500,500) (20,20)) blankTurtle
+    drawFitRainbow cnv (RenderConfig (500,500) (20,20)) blankTurtle
         . map defaultTranslator . _state . (`nthGen` n) $ syst
     t1 <- now
     writeLog $ "Took " ++ show (t1 - t0) ++ " ms to calc and render."
